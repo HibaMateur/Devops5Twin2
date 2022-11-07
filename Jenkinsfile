@@ -31,12 +31,45 @@ pipeline {
         stage('MVN SONARQUBE'){
                 steps {
                     sh """mvn sonar:sonar \
-                              -Dsonar.projectKey=hibamateur \
-                              -Dsonar.host.url=http://192.168.1.18:9000 \
-                              -Dsonar.login=352949f338e0fc45b7ea61f29716781f72ae060b
+                          -Dsonar.projectKey=hibamateur \
+                          -Dsonar.host.url=http://192.168.1.18:9000 \
+                          -Dsonar.login=317ea18bfa56a61425a506fecf0b58322d240b13
+
+
                     """
                 }
 
             }
+        stage('Nexus') {
+                steps {
+                    sh 'mvn deploy -DskipTests'
+      }
+    }
+        stage('Junit/Mockito'){
+            steps{
+                sh "mvn test"
+            }
+        }
+        stage("Building Docker Image") {
+                steps{
+                    sh 'docker build -t hibamateur/spring .'
+                }
+        }
+        stage("Login to DockerHub") {
+                steps{
+
+                    sh 'docker login -u hibamateur -p HibaMateur123'
+                }
+        }
+        stage("Push to DockerHub") {
+                steps{
+                    sh 'docker push hibamateur/spring'
+                }
+        }
+        stage("Docker-compose") {
+                steps{
+                    sh 'docker-compose up -d'
+                }
+        }
     }
 }
