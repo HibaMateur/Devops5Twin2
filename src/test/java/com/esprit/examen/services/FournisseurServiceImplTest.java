@@ -24,15 +24,16 @@ class fournisseur {
 
     @InjectMocks
     FournisseurServiceImpl Service;
+  
+    Fournisseur fournisseur = new Fournisseur("a","test");
 
-    Fournisseur fournisseur = Fournisseur.builder().code("11").libelle(null).build();
     List<Fournisseur> listFournisseur = new ArrayList<Fournisseur>() {
         {
-            add(Fournisseur.builder().code("10").libelle(null).build());
-            add(Fournisseur.builder().code("12").libelle(null).build());
+            add(new Fournisseur("a e","a"));
+            add(new Fournisseur("aa e","a"));
+            add(new Fournisseur("a ee","a"));
         }
     };
-
     @Test
     void testRetrieveFournisseur() {
         Mockito.when(Repo.findById(Mockito.anyLong())).thenReturn(Optional.of(fournisseur));
@@ -60,8 +61,8 @@ class fournisseur {
     void testUpdatefournisseur() {
     	
     	Mockito.when(Repo.findById(fournisseur.getIdFournisseur())).thenReturn(Optional.of(fournisseur));
-    	Fournisseur f1 = Service.retrieveFournisseur(fournisseur.getIdFournisseur());
-    	f1.setCode("loulou");
+    	Fournisseur f1 = Service.retrieveFournisseur(1L);
+    	f1.setCode("aee");
         Mockito.when(Repo.save(f1)).thenReturn(f1);
         Assertions.assertEquals(f1.getCode(), Service.updateFournisseur(f1).getCode());
 
@@ -73,7 +74,7 @@ class fournisseur {
     void testDeletefournisseur() {
         Service.deleteFournisseur(fournisseur.getIdFournisseur());
         Mockito.verify(Repo, Mockito.times(1)).deleteById(fournisseur.getIdFournisseur());
-        System.out.println("aaaa");
+       
     }
 
 
