@@ -58,7 +58,7 @@ class fournisseur {
 
     @Test
     void testUpdatefournisseur() {
-    	fournisseur.setCode(null);
+    	fournisseur.setCode("16");
         Mockito.when(Repo.save(fournisseur)).thenReturn(fournisseur);
         Fournisseur s1 = Service.updateFournisseur(fournisseur);
         Assertions.assertEquals(fournisseur, s1);
